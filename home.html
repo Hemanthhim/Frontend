@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #EDF4F2;
+            color: #4b13f2;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+
+        .sidebar {
+            width: 240px;
+            background: #31473A;
+            color: #EDF4F2;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .sidebar img {
+            border-radius: 50%;
+            width: 70px;
+            margin-bottom: 15px;
+            border: 3px solid #e5e4ea;
+        }
+
+        .menu {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+        }
+
+        .menu li {
+            padding: 15px 20px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .menu li:hover,
+        .menu li.active {
+            background: #7C8363;
+            color: #EDF4F2;
+        }
+
+
+        .main {
+            flex: 1;
+            padding: 25px;
+            background: #EDF4F2;
+            overflow-y: auto;
+        }
+
+        h2 {
+            margin-bottom: 15px;
+            color: #31473A;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #31473A;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #7C8363;
+            border-radius: 6px;
+            background: white;
+            color: #31473A;
+            font-size: 14px;
+            outline: none;
+        }
+
+        textarea {
+            resize: none;
+            height: 60px;
+        }
+
+        button {
+            background: #7C8363;
+            border: none;
+            padding: 10px 20px;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background: #5f654c;
+            transform: translateY(-2px);
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+        .approval {
+            display: flex;
+            justify-content: space-between;
+            background: white;
+            padding: 12px;
+            margin: 6px 0;
+            border-radius: 6px;
+            border-left: 4px solid #7C8363;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .approval span {
+            flex: 1;
+            font-size: 14px;
+            color: #31473A;
+        }
+
+        .approval button {
+            margin-left: 8px;
+        }
+
+        .approval button:nth-child(1) {
+            background: #31473A;
+        }
+
+        .approval button:nth-child(1):hover {
+            background: #25362c;
+        }
+
+        .approval button:nth-child(2) {
+            background: #b91c1c;
+        }
+
+        .approval button:nth-child(2):hover {
+            background: #991b1b;
+        }
+
+
+        #supportResponse {
+            margin-top: 12px;
+            color: #3108e3;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="sidebar">
+            <img src="https://via.placeholder.com/70" alt="User">
+            <ul class="menu">
+                <li class="active" onclick="showSection('home', this)">🏠 Home</li>
+                <li onclick="showSection('expenses', this)">💰 Expenses</li>
+                <li onclick="showSection('teams', this)">👥 Teams</li>
+                <li onclick="showSection('approvals', this)">✅ Approvals</li>
+                <li onclick="showSection('reports', this)">📊 Reports</li>
+                <li onclick="showSection('support', this)">📞 Support</li>
+            </ul>
+        </div>
+
+        <div class="main">
+
+            <div id="home" class="content-section active">
+                <h2>Welcome to Dashboard</h2>
+                <p>Use the sidebar to navigate different sections.</p>
+            </div>
+
+            <div id="expenses" class="content-section">
+                <h2>New Expense</h2>
+                <div class="form-group">
+                    <label>Amount</label>
+                    <input type="number" id="amount" placeholder="Enter amount">
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="date">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="category">
+                        <option>Travel</option>
+                        <option>Food</option>
+                        <option>Office Supplies</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Assign to Team Member</label>
+                    <select id="assignedTo"></select>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="description"></textarea>
+                </div>
+                <button onclick="submitExpense()">Submit Expense for Approval</button>
+            </div>
+
+
+            <div id="teams" class="content-section">
+                <h2>Teams</h2>
+                <div class="form-group">
+                    <label>Add Team Member</label>
+                    <input type="text" id="teamMember" placeholder="Enter member name">
+                </div>
+                <button onclick="addTeamMember()">Add Member</button>
+                <h3>Team Members (<span id="memberCount">0</span>):</h3>
+                <ul id="teamList"></ul>
+            </div>
+
+            <div id="approvals" class="content-section">
+                <h2>Approvals</h2>
+                <div id="approvalList"></div>
+            </div>
+
+
+            <div id="reports" class="content-section">
+                <h2>Reports</h2>
+                <button onclick="generateReport()">Generate Report</button>
+                <div id="reportOutput"></div>
+            </div>
+
+
+            <div id="support" class="content-section">
+                <h2>Support</h2>
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" id="supportName" placeholder="Enter name">
+                </div>
+                <div class="form-group">
+                    <label>Your Message</label>
+                    <textarea id="supportMessage"></textarea>
+                </div>
+                <button onclick="sendSupport()">Send</button>
+                <p id="supportResponse"></p>
+            </div>
+        </div>
+    </div>
+    <script>
+        let pendingApproval = [];
+        let approvalExpenses = [];
+        let teamMembers = [];
+
+        //load the data
+        function saveData() {
+            localStorage.setItem('teamMember', JSON.stringify(teamMembers));
+            localStorage.setItem('pendingApproval', JSON.stringify(pendingApproval));
+            localStorage.setItem('approvalExpenses', JSON.stringify(approvalExpenses));
+        }
+
+        // for fetching the data
+        function loadData() {
+            teamMembers = JSON.parse(localStorage.getItem('teamMember'));
+            approvalExpenses = JSON.parse(localStorage.getItem('approvalExpenses'));
+            pendingApproval = JSON.parse(localStorage.getItem('pendingApproval'));
+        }
+
+        window.onload = () => {
+            loadData();
+        }
+
+        //values are added to variable
+        function submitExpense() {
+            let amount = document.getElementById('amount').value;
+            let date = document.getElementById('date').value;
+            let assignedTo = document.getElementById('assignedTo').value;
+            let category = document.getElementById('category').value;
+            let description = document.getElementById('decsription').value;
+
+            if (!amount || date || assignedTo || category || description) {
+                alert('please fill all the fields');
+            }
+
+            //all values are added to expense variable and push to approval
+            let expense = { amount, date, assignedTo, category, description };
+            pendingApproval.push(expense);
+            alert('submit expense is succesfully');
+            document.getElementById('amount').innerHTML = "";
+            document.getElementById('date').innerHTML = "";
+            document.getElementById('category').innerHTML = "";
+            document.getElementById('desvription').innerHTML = "";
+            return;
+
+
+        }
+// adding new member to the teammembers
+        function addTeamMember(){
+            let member = document.getElementById('assignedTo').value;
+            if(!member){
+                alert('add member');
+                retrun;
+            }
+            teamMembers.push(member);
+            document.getElementById('assignedTo').innerHTML="";
+        }
+
+        //show the teammember data
+        function renderTeam(){
+            let teamList = document.getElementById('teamList');
+            teamList.innerText="";
+            teamMembers.forEach=(member)=>{
+                let memberList = document.createElement('li');
+                li.innerHTML="";
+                teamList.append(memberList);
+                document.getElementById('memberCount').innerHTML = member.length;
+            }
+        
+        function expenseApproval(){
+            let approvalList = document.getElementById('approvalList').value;
+            approvalList.innerHTML="";
+            approvalList.forEach(()=>{
+                let div = document.createElement('div');
+                div.classList="approve";
+                //error
+                div.innerText = `${x.amount}-${x.date}-${x.category}[${x.description}](${x.assignedTo})`;
+                 
+                //approveBtn
+                let approveButton = document.createElement('button');
+                 approveButton.innerHTML="";
+                 approveButton.classList="approve";
+
+                let rejectBtn = document.createElement('button');
+                rejectBtn.innerHTML="";
+                rejectBtn.classList="reject";
+
+                 if(pendingApproval === 0 ){
+                    alert('no approvals');
+                    return;
+                 }   
+                 div.appendChild(approveButton);
+                 div.appendChild(rejectBtn);
+            })
+
+        }
+        }
+
+    </script>
+</body>
+
+</html>

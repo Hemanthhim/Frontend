@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Dashboard</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #030d13, #05070c);
+      height: 100vh;
+      display: flex;
+      color: #333;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background: #1e40af;
+      color: #fff;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .profile {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .profile img {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: 3px solid #93c5fd;
+    }
+
+    .profile h3 {
+      margin-top: 10px;
+      font-size: 16px;
+    }
+
+    .menu a {
+      display: block;
+      padding: 12px 15px;
+      color: #f0eff3;
+      text-decoration: none;
+      border-radius: 8px;
+      margin: 5px 0;
+      transition: background 0.3s;
+    }
+
+    .menu a:hover, .menu a.active {
+      background: #b5a81441;
+    }
+
+    .brand {
+      text-align: center;
+      font-weight: bold;
+      color: #93c5fd;
+      font-size: 18px;
+    }
+
+    /* Main */
+    .main {
+      flex: 1;
+      padding: 30px;
+      background: #cfe816;
+      overflow-y: auto;
+    }
+
+    .main h1 {
+      margin-bottom: 20px;
+      color: #1e3a8a;
+    }
+
+    .form-container {
+      display: flex;
+      gap: 20px;
+    }
+
+    .form-section {
+      flex: 2;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      outline: none;
+      transition: border 0.3s, box-shadow 0.3s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 6px rgba(37,99,235,0.4);
+    }
+
+    textarea {
+      resize: none;
+    }
+
+    /* Upload box */
+    .upload-box {
+      flex: 1;
+      background: #2e50d5;
+      border: 2px dashed #93c5fd;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      cursor: pointer;
+      transition: background 0.3s, border 0.3s;
+      text-align: center; /* Center text inside */
+    }
+
+    .upload-box:hover {
+      background: #eff6ff;
+      border-color: #2563eb;
+    }
+
+    .upload-box span {
+      font-size: 14px;
+      margin-top: 8px;
+      color: #2563eb;
+      font-weight: 600; /* Make text bolder */
+    }
+
+    /* Buttons */
+    .btn-group {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      padding: 12px 18px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .btn-draft {
+      background: #2563eb;
+      color: #fff;
+    }
+
+    .btn-save {
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <div>
+      <div class="profile">
+        <img src="https://via.placeholder.com/70" alt="profile">
+        <h3>Janice Chandler</h3>
+      </div>
+      <div class="menu">
+        <a href="#">🏠 Home</a>
+        <a href="#" class="active">💰 Expenses</a>
+        <a href="#">✈️ Trips</a>
+        <a href="#">✅ Approvals</a>
+        <a href="#">⚙️ Settings</a>
+        <a href="#">📞 Support</a>
+      </div>
+    </div>
+    <div class="brand">EXPENSIO</div>
+  </div>
+
+  <div class="main">
+    <h1>New Expense</h1>
+    <div class="form-container">
+      <div class="form-section">
+        <form id="expense-form">
+          <div class="form-group">
+            <label>Subject*</label>
+            <input type="text" id="subject" required>
+          </div>
+          <div class="form-group">
+            <label>Merchant*</label>
+            <input type="text" id="merchant" required>
+          </div>
+          <div class="form-group">
+            <label>Date*</label>
+            <input type="date" id="date" required>
+          </div>
+          <div class="form-group">
+            <label>Total*</label>
+            <input type="number" id="total" placeholder="Amount" required>
+          </div>
+          <div class="form-group">
+            <label>Category*</label>
+            <select id="category" required>
+              <option value="">Select Category</option>
+              <option value="Travel">Travel</option>
+              <option value="Food">Food</option>
+              <option value="Supplies">Supplies</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="description" rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Employee*</label>
+            <input type="text" id="employee" required>
+          </div>
+          <div class="btn-group">
+            <button type="button" class="btn-draft">Save draft</button>
+            <button type="submit" class="btn-save">Save</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="upload-box">
+        <div style="font-size:40px;">+</div>
+        <span>Upload an invoice</span>
+        <input type="file" id="invoice-upload" hidden>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Get form elements
+  const expenseForm = document.getElementById('expense-form');
+  const saveDraftBtn = document.querySelector('.btn-draft');
+  const saveBtn = document.querySelector('.btn-save');
+  const uploadBox = document.querySelector('.upload-box');
+  const fileInput = document.getElementById('invoice-upload');
+  const uploadText = uploadBox.querySelector('span');
+
+  // Function to clear the form
+  const clearForm = () => {
+    expenseForm.reset();
+    uploadText.textContent = "Upload an invoice";
+    fileInput.value = ''; // Reset file input
+  };
+
+  // --- Event Listeners ---
+
+  // 1. "Save" button functionality
+  expenseForm.addEventListener('submit', (event) => {
+    event.preventDefault(); // Prevent default form submission
+
+    // Collect data
+    const subject = document.getElementById('subject').value;
+    const merchant = document.getElementById('merchant').value;
+    const date = document.getElementById('date').value;
+    const total = document.getElementById('total').value;
+    const category = document.getElementById('category').value;
+    const employee = document.getElementById('employee').value;
+
+    // Basic validation
+    if (!subject || !merchant || !date || !total || !category || !employee) {
+      alert('Please fill out all required fields marked with *');
+      return;
+    }
+
+    alert('✅ Expense saved successfully!');
+    clearForm();
+  });
+
+  // 2. "Save draft" button functionality
+  saveDraftBtn.addEventListener('click', () => {
+    const subject = document.getElementById('subject').value;
+    if (!subject) {
+      alert('Please enter at least a subject to save a draft.');
+      return;
+    }
+    alert('📝 Draft saved!');
+    clearForm();
+  });
+
+  // 3. Upload box functionality
+  uploadBox.addEventListener('click', () => {
+    fileInput.click(); // Trigger the hidden file input
+  });
+
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files.length > 0) {
+      // Display the name of the selected file
+      uploadText.textContent = `File: ${fileInput.files[0].name}`;
+      alert(`Selected file: ${fileInput.files[0].name}`);
+    }
+  });
+
+</script>
+
+</body>
+</html>cd
